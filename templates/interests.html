@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>Social Voyage - Interests</title> 
+    <link rel="stylesheet" href="/static/interests/interests.css"> 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const interestItems = document.querySelectorAll(".interest-item");
+            const saveButton = document.getElementById("save-button");
+
+            let selectedInterests = [];
+
+            // Interest selection logic
+            interestItems.forEach(item => {
+                item.addEventListener("click", function () {
+                    this.classList.toggle("selected");
+                    const interest = this.textContent.trim();
+                    
+                    if (this.classList.contains("selected")) {
+                        selectedInterests.push(interest);
+                    } else {
+                        selectedInterests = selectedInterests.filter(i => i !== interest);
+                    }
+                });
+            });
+
+            // Save Interests & Redirect
+            saveButton.addEventListener("click", function () {
+                if (selectedInterests.length === 0) {
+                    alert("Please select at least one interest.");
+                    return;
+                }
+
+                fetch("/interests", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        interests: selectedInterests
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = data.redirect;  // Use the redirect URL from the response
+                    } else {
+                        alert("Error saving interests. Please try again.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("An error occurred. Please try again.");
+                });
+            });
+        });
+    </script>
+</head> 
+<body> 
+    <header> 
+        <div class="container"> 
+            <h1 class="logo">Social Voyage :) </h1> 
+            <nav> 
+                <ul id="nav-links"> 
+                    <li><a href="#">Home</a></li> 
+                    <li><a href="{{ url_for('profile') }}">Profile</a></li> 
+                    <li><a href="#">Explore</a></li> 
+                    <li><a href="#">Contact Us</a></li> 
+                </ul> 
+            </nav> 
+            <button id="logout-button" onclick="location.href='/logout'">Logout</button> 
+        </div> 
+    </header> 
+    <main> 
+        <section class="interest-content"> 
+            <h2>Select Your Interests</h2> 
+            <p>Choose the topics that excite you and find like-minded travelers!</p> 
+
+            <!-- Movies Category -->
+            <div class="category-title">Movies</div>
+            <div class="interest-grid"> 
+                <div class="interest-item">Romantic</div> 
+                <div class="interest-item">Sad</div> 
+                <div class="interest-item">Comedy</div> 
+                <div class="interest-item">Horror</div> 
+                <div class="interest-item">Action</div> 
+                <div class="interest-item">Sci-Fi</div> 
+                <div class="interest-item">Thriller</div> 
+                <div class="interest-item">Documentary</div> 
+                <div class="interest-item">Fantasy</div> 
+                <div class="interest-item">Drama</div> 
+                <div class="interest-item">Animation</div> 
+                <div class="interest-item">Mystery</div> 
+                <div class="interest-item">Adventure</div> 
+            </div>
+
+            <!-- Sports Category -->
+            <div class="category-title">Sports</div>
+            <div class="interest-grid"> 
+                <div class="interest-item">Football</div>
+                <div class="interest-item">Basketball</div>
+                <div class="interest-item">Baseball</div>
+                <div class="interest-item">Tennis</div>
+                <div class="interest-item">Cricket</div>
+                <div class="interest-item">Rugby</div>
+                <div class="interest-item">Cycling</div>
+                <div class="interest-item">Swimming</div>
+                <div class="interest-item">Boxing</div>
+                <div class="interest-item">Golf</div>
+                <div class="interest-item">Volleyball</div>
+                <div class="interest-item">Athletics</div>
+                <div class="interest-item">Gym</div>
+            </div>
+
+            <!-- Travel Category -->
+            <div class="category-title">Travel</div>
+            <div class="interest-grid"> 
+                <div class="interest-item">Backpacking</div>
+                <div class="interest-item">Road Trip</div>
+                <div class="interest-item">City Tours</div>
+                <div class="interest-item">Adventure Travel</div>
+                <div class="interest-item">Beach Holidays</div>
+                <div class="interest-item">Heritage</div>
+                <div class="interest-item">Eco-Tourism</div>
+                <div class="interest-item">Solo Travel</div>
+                <div class="interest-item">Luxury Travel</div>
+                <div class="interest-item">Cruises</div>
+            </div>
+
+            <!-- Hobbies Category -->
+            <div class="category-title">Hobbies</div>
+            <div class="interest-grid"> 
+                <div class="interest-item">Photography</div>
+                <div class="interest-item">Art</div>
+                <div class="interest-item">Cooking</div>
+                <div class="interest-item ">Gardening</div>
+                <div class="interest-item">Reading</div>
+                <div class="interest-item">Writing</div>
+                <div class="interest-item">Painting</div>
+                <div class="interest-item">Music</div>
+                <div class="interest-item">Crafting</div>
+                <div class="interest-item">Knitting</div>
+                <div class="interest-item">DIY Projects</div>
+                <div class="interest-item">Blogging</div>
+                <div class="interest-item">Pottery</div>
+            </div>
+            
+            <input type="hidden" id="selected-interests-input" name="selected-interests">
+
+            <button class="save-button" id="save-button">Save Interests</button> 
+        </section> 
+    </main> 
+    <footer> 
+        <div class="container"> 
+            <p>© 2024 Social Voyage. All rights reserved.</p> 
+        </div> 
+    </footer> 
+</body>
+</html>

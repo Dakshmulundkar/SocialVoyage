@@ -1,0 +1,106 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+/* Navbar */
+header {
+    background: #f5f5f5; /* Light grey header background */
+    padding: 15px 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid #ddd; /* Light grey border */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    color: #333;
+    text-align: center;
+    margin: 7% 0 0 0;
+    padding: 0;
+}
+header {
+    background: #1c1c1c;
+    padding: 15px 0;
+}
+.container {
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+}
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+.interest-content {
+    margin: 50px auto;
+    width: 70%;
+}
+.interest-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+.interest-item {
+    background: #f4f4f4;
+    padding: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    border: 2px solid #ddd;
+}
+.interest-item:hover, .interest-item.selected {
+    background: #0f9d58;
+    color: #fff;
+    border-color: #0f9d58;
+}
+.save-button {
+    background: #0f9d58;
+    border: none;
+    padding: 10px 20px;
+    font-size: 18px;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.save-button:hover {
+    background: #0c7a45;
+}
+footer {
+    background: #1c1c1c;
+    padding: 15px 0;
+    margin-top: 50px;
+}
+footer p {
+    color: #fff;
+}
+.category-title {
+    font-size: 24px;
+    margin-top: 40px;
+    color: #333;
+    font-weight: bold;
+    text-decoration: underline;
+}
