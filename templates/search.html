@@ -1,0 +1,328 @@
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Find Travel Companions - Travel Plans</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+   body {
+        font-family: 'Inter', sans-serif;
+    }
+  </style>
+ </head>
+ <body class="bg-gray-100">
+  <div class="max-w-full mx-auto bg-white min-h-screen p-4">
+   <div class="flex items-center justify-between mb-6">
+    <h1 class="text-xl font-semibold">Find Travel Companions</h1>
+    <div class="w-10 h-10 rounded-full overflow-hidden">
+        {% if user.profilePhoto %}
+            <img alt="Profile Picture" class="w-full h-full object-cover" src="{{ user.profilePhoto }}"/>
+        {% else %}
+            <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                <i class="fas fa-user text-gray-400"></i>
+            </div>
+        {% endif %}
+    </div>
+   </div>
+
+   <div class="flex flex-col lg:flex-row gap-6">
+    <!-- Left sidebar with filters -->
+    <div class="lg:w-1/4 xl:w-1/5">
+     <div class="bg-white rounded-lg shadow-md p-6 sticky top-20">
+      <h2 class="text-lg font-semibold mb-4">Travel Preferences</h2>
+      <form id="travelPreferences">
+       <div class="space-y-4">
+        <div>
+         <label class="block text-gray-700 mb-2">Trip Type</label>
+         <select class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                 id="tripType" 
+                 onchange="updateDestinations()">
+          <option value="domestic">Domestic</option>
+          <option value="international">International</option>
+         </select>
+        </div>
+
+        <div>
+         <label class="block text-gray-700 mb-2">Destination</label>
+         <select class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                 id="destination">
+         </select>
+        </div>
+
+        <div>
+         <label class="block text-gray-700 mb-2">Group Size</label>
+         <select class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                 id="groupSize">
+          <option value="1">1 Person</option>
+          <option value="2">2 People</option>
+          <option value="3">3 People</option>
+          <option value="4">4 People</option>
+          <option value="5">5+ People</option>
+         </select>
+        </div>
+
+        <div>
+         <label class="block text-gray-700 mb-2">Your Travel Companion</label>
+         <select class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                 id="gender">
+          <option value="all">Show All</option>
+          <option value="male">Male </option>
+          <option value="female">Female</option>
+          <option value="others">Other </option>
+         </select>
+        </div>
+
+        <div>
+         <label class="block text-gray-700 mb-2">Age Group</label>
+         <select class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                 id="ageGroup">
+          <option value="18-25">18-25 years</option>
+          <option value="26-35">26-35 years</option>
+          <option value="36-45">36-45 years</option>
+          <option value="46+">46+ years</option>
+         </select>
+        </div>
+
+        <button class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+                onclick="findMatches()">
+         Find Travel Companions
+        </button>
+       </div>
+      </form>
+     </div>
+    </div>
+
+    <!-- Right side results container -->
+    <div class="lg:w-3/4 xl:w-4/5 overflow-x-auto">
+     <div class="min-w-[1000px]" id="matchResults">
+      <!-- Results will be populated here -->
+     </div>
+    </div>
+   </div>
+
+   <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
+    <div class="flex justify-around py-2">
+     <a class="text-gray-500" href="/">
+      <i class="fas fa-home text-xl"></i>
+     </a>
+     <a class="text-blue-500" href="/search">
+      <i class="fas fa-search text-xl"></i>
+     </a>
+     <a class="text-blue-500" href="/create_plan">
+        <i class="fas fa-plus-circle text-2xl"></i>
+    </a>
+     <a class="text-gray-500" href="#">
+      <i class="fas fa-heart text-xl"></i>
+     </a>
+     <a class="text-gray-500" href="/view_profile">
+        <i class="fas fa-user text-xl"></i>
+    </a>
+    </div>
+   </div>
+  </div>
+
+  <script>
+   const destinations = {
+    domestic: ["Delhi", "Mumbai", "Goa", "Jaipur", "Manali", "Kerala", "Kolkata", "Varanasi" ,'Bangalore'],
+    international: ['USA', 'UK', 'Australia', 'Japan', 'France',"Paris", "New York", "London", "Dubai", "Tokyo", "Sydney", "Singapore", "Bali"]
+   };
+
+   function updateDestinations() {
+    const tripType = document.getElementById('tripType').value;
+    const destinationSelect = document.getElementById('destination');
+    destinationSelect.innerHTML = '';
+    
+    destinations[tripType].forEach(city => {
+     const option = document.createElement('option');
+     option.value = city;
+     option.textContent = city;
+     destinationSelect.appendChild(option);
+    });
+   }
+
+   function findMatches(event) {
+    if (event) {
+     event.preventDefault();
+    }
+
+    const resultsContainer = document.getElementById('matchResults');
+    resultsContainer.innerHTML = '<div class="text-center py-8"><i class="fas fa-spinner fa-spin text-blue-500 text-3xl mb-4"></i><p>Searching for matches...</p></div>';
+
+    const requestData = {
+     destination: document.getElementById('destination').value,
+     tripType: document.getElementById('tripType').value,
+     numPeople: document.getElementById('groupSize').value,
+     gender: document.getElementById('gender').value,
+     ageRange: parseAgeRange(document.getElementById('ageGroup').value)
+    };
+
+    console.log("Search criteria:", requestData);
+
+    fetch("/find_matches", {
+     method: "POST",
+     headers: { 
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+     },
+     credentials: 'include',
+     body: JSON.stringify(requestData)
+    })
+    .then(response => {
+     console.log("Response status:", response.status);
+     console.log("Response headers:", Object.fromEntries(response.headers.entries()));
+     
+     if (!response.ok) {
+      return response.text().then(text => {
+        console.error("Error response body:", text);
+        throw new Error(`Server error: ${response.status} - ${text || response.statusText}`);
+      });
+     }
+     
+     return response.json();
+    })
+    .then(data => {
+     console.log("Received data:", data);
+     resultsContainer.innerHTML = '';
+
+     // Extract matches array from response
+     const matches = Array.isArray(data) ? data : (data.matches || data.users || []);
+     
+     if (!matches || matches.length === 0) {
+      resultsContainer.innerHTML = `
+       <div class="text-center py-8">
+        <i class="fas fa-search text-gray-400 text-4xl mb-4"></i>
+        <p class="text-gray-600">No matches found for your criteria.</p>
+        <p class="text-gray-500 text-sm mt-2">Try adjusting your preferences to find more travel companions.</p>
+       </div>`;
+      return;
+     }
+
+     const profilesGrid = document.createElement('div');
+     profilesGrid.classList.add('flex', 'flex-col', 'space-y-2', 'mb-20');
+     resultsContainer.appendChild(profilesGrid);
+
+     // Add header row
+     const headerRow = document.createElement('div');
+     headerRow.classList.add('flex', 'items-center', 'px-4', 'py-2', 'bg-gray-100', 'rounded-lg', 'font-semibold', 'text-sm', 'sticky', 'top-0', 'z-10');
+     headerRow.innerHTML = `
+       <div class="w-16 flex-shrink-0"></div>
+       <div class="flex-1 px-4 min-w-[160px]">Name</div>
+       <div class="flex-1 px-4 min-w-[100px]">Gender</div>
+       <div class="flex-1 px-4 min-w-[120px]">Nationality</div>
+       <div class="flex-1 px-4 min-w-[120px]">Destination</div>
+       <div class="flex-1 px-4 min-w-[160px]">Languages</div>
+       <div class="flex-1 px-4 min-w-[100px]">Age</div>
+       <div class="w-28 flex-shrink-0"></div>
+     `;
+     profilesGrid.appendChild(headerRow);
+
+     matches.forEach(profile => {
+      // Skip the current user
+      if (profile.email === '{{ user.email }}') {
+        return;
+      }
+
+      const age = calculateAge(profile.birthday);
+      
+      const profileCard = document.createElement('div');
+      profileCard.classList.add('bg-white', 'rounded-lg', 'shadow-md', 'overflow-hidden', 'hover:bg-gray-50', 'transition-colors');
+      
+      profileCard.innerHTML = `
+       <div class="flex items-center px-4 py-3">
+         <div class="w-16 flex-shrink-0">
+           <img src="${profile.profilePhoto || '/static/default-profile.png'}" 
+                alt="${profile.name}'s Profile Picture"
+                class="w-12 h-12 rounded-full object-cover">
+         </div>
+         <div class="flex-1 px-4 min-w-[160px] font-semibold text-gray-900 truncate">
+           ${profile.name || profile.username || 'Anonymous'}
+         </div>
+         <div class="flex-1 px-4 min-w-[100px] text-sm text-gray-600">
+           ${profile.gender || 'N/A'}
+         </div>
+         <div class="flex-1 px-4 min-w-[120px] text-sm text-gray-600 truncate">
+           ${profile.nationality || 'N/A'}
+         </div>
+         <div class="flex-1 px-4 min-w-[120px] text-sm text-gray-600 truncate">
+           ${profile.destination || 'N/A'}
+         </div>
+         <div class="flex-1 px-4 min-w-[160px] text-sm text-gray-600 truncate">
+           ${profile.languages ? (Array.isArray(profile.languages) ? profile.languages.join(', ') : profile.languages) : 'N/A'}
+         </div>
+         <div class="flex-1 px-4 min-w-[100px] text-sm text-gray-600">
+           ${age} years
+         </div>
+         <div class="w-28 flex-shrink-0">
+           <button class="connect-button px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors w-full">
+             Connect
+           </button>
+         </div>
+       </div>
+      `;
+
+      const connectButton = profileCard.querySelector('.connect-button');
+      connectButton.addEventListener('click', (e) => {
+       e.preventDefault();
+       e.stopPropagation();
+       connectButton.textContent = 'Connected';
+       connectButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+       connectButton.classList.add('bg-green-500');
+       connectButton.disabled = true;
+      });
+
+      profilesGrid.appendChild(profileCard);
+     });
+    })
+    .catch(error => {
+     console.error("Search error:", error);
+     resultsContainer.innerHTML = `
+      <div class="text-center py-8">
+       <i class="fas fa-exclamation-circle text-red-500 text-4xl mb-4"></i>
+       <p class="text-red-600 font-semibold mb-2">Error: ${error.message}</p>
+       <p class="text-gray-600">Please try again or contact support if the problem persists.</p>
+      </div>
+     `;
+    });
+   }
+
+   function parseAgeRange(ageRangeStr) {
+    const [min, max] = ageRangeStr.split('-').map(num => parseInt(num));
+    return { min, max: max || min };
+   }
+
+   function calculateAge(birthday) {
+    if (!birthday) return 'N/A';
+    
+    const birthDate = new Date(birthday);
+    if (isNaN(birthDate.getTime())) return 'N/A';
+    
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+     age--;
+    }
+    
+    return age;
+   }
+
+   document.addEventListener("DOMContentLoaded", function() {
+    updateDestinations();
+    // Set initial destination options
+    const tripType = document.getElementById('tripType').value;
+    const destinationSelect = document.getElementById('destination');
+    destinations[tripType].forEach(city => {
+        const option = document.createElement('option');
+        option.value = city;
+        option.textContent = city;
+        destinationSelect.appendChild(option);
+    });
+    
+    document.getElementById("travelPreferences").addEventListener("submit", findMatches);
+   });
+  </script>
+ </body>
+</html> 
