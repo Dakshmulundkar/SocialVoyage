@@ -309,115 +309,106 @@ def create_plan_page():
         return redirect(url_for("login"))
     return render_template('create_plan.html')
 
+# Jaccard Similarity for interest-based matching
+def jaccard_similarity(set1, set2):
+    intersection = len(set(set1) & set(set2))
+    union = len(set(set1) | set(set2))
+    return intersection / union if union > 0 else 0
+
 @app.route('/find_matches', methods=['POST'])
 def find_matches():
-    print("Received request to /find_matches")  # Debug print
-    
-    # Check if user is logged in
-    if not session.get('email'):
-        return jsonify({
-            "error": "Authentication required",
-            "message": "Please log in to find matches",
-            "code": "AUTH_REQUIRED"
-        }), 401
+    if "email" not in session:
+        return jsonify({"error": "Not logged in"}), 401
 
     try:
-        data = request.get_json()
-        print("Raw request data:", request.data)  # Debug print
-        print("Parsed JSON data:", data)  # Debug print
-        
-        if not data:
-            return jsonify({
-                "error": "Invalid request",
-                "message": "No data received",
-                "code": "INVALID_REQUEST"
-            }), 400
-
-        # Extract search criteria
+        data = request.json
         destination = data.get("destination")
         num_people = int(data.get("numPeople", 1))
-        gender = data.get("gender", "all")  # Changed from sex to gender
-        age_range = data.get("ageRange", {"min": 18, "max": 25})
+        gender = data.get("gender", "all")
 
         if not destination:
-            return jsonify({
-                "error": "Missing parameter",
-                "message": "Destination is required",
-                "code": "MISSING_DESTINATION"
-            }), 400
+            return jsonify({"error": "Destination is required"}), 400
 
-        print(f"Processing request - destination: {destination}, people: {num_people}, gender: {gender}, age range: {age_range}")
+        # Get current user's interests
+        current_user = users_collection.find_one({"email": session["email"]})
+        if not current_user or not current_user.get('interests'):
+            return jsonify({"error": "Current user has no interests set"}), 400
 
-        # Build the query
-        query = {
-            "email": {"$ne": session["email"]},  # Exclude current user
-            "destination": destination  # Match exact destination
+        # Base query for filtering users
+        base_query = {
+            "email": {"$ne": session["email"]},
+            "destination": destination,
+            "interests": {"$exists": True, "$ne": []}  # Only users with interests
         }
-        
-        # Handle gender preference matching
+
+        # Add gender filter if specified
         if gender and gender != "all":
-            query["gender"] = gender  # Direct match on gender field
+            base_query["gender"] = gender
 
-        # Add age range filter if provided
-        if age_range:
-            # Calculate age range dates
-            today = datetime.utcnow()
-            max_birth_year = today.year - age_range["min"]
-            min_birth_year = today.year - age_range["max"]
-            
-            # Convert birthday string to datetime for comparison
-            query["$expr"] = {
-                "$and": [
-                    {"$gte": [{"$year": {"$dateFromString": {"dateString": "$birthday"}}}, min_birth_year]},
-                    {"$lte": [{"$year": {"$dateFromString": {"dateString": "$birthday"}}}, max_birth_year]}
-                ]
-            }
-
-        print("MongoDB query:", query)  # Debug print
-
-        # Execute query and get results
+        """
+        # NORMAL MATCHING METHOD (Uncomment this block to use normal matching)
+        # This method simply returns users based on destination and gender matching
+        
         matched_users = list(users_collection.find(
-            query,
+            base_query,
             {
                 "_id": 0,
                 "name": 1,
+                "username": 1,
                 "nationality": 1,
                 "profilePhoto": 1,
                 "birthday": 1,
+                "gender": 1,
                 "languages": 1,
-                "interests": 1,
-                "tripType": 1,
                 "destination": 1,
-                "gender": 1,  # Add gender field to projection
-                "email": 1  # Also include email for user filtering
+                "email": 1
             }
         ).limit(num_people))
-        
-        print(f"Found {len(matched_users)} matches")  # Debug print
-        print("Matched users:", matched_users)  # Debug print
 
-        if not matched_users:
-            return jsonify({
-                "matches": [],
-                "message": "No matches found for your criteria",
-                "code": "NO_MATCHES"
-            })
+        print(f"Found {len(matched_users)} matches for destination: {destination}")
+        return jsonify(matched_users)
+        """
 
-        return jsonify({
-            "matches": matched_users,
-            "message": f"Found {len(matched_users)} potential travel companions",
-            "code": "SUCCESS"
-        })
+        # SIMILARITY MATCHING METHOD (Current active method)
+        # This method calculates Jaccard similarity between user interests
+        potential_matches = list(users_collection.find(
+            base_query,
+            {
+                "_id": 0,
+                "name": 1,
+                "username": 1,
+                "nationality": 1,
+                "profilePhoto": 1,
+                "birthday": 1,
+                "gender": 1,
+                "languages": 1,
+                "destination": 1,
+                "email": 1,
+                "interests": 1
+            }
+        ))
+
+        # Calculate similarity scores
+        matches_with_scores = []
+        current_user_interests = set(current_user.get('interests', []))
         
+        for user in potential_matches:
+            user_interests = set(user.get('interests', []))
+            similarity = jaccard_similarity(current_user_interests, user_interests)
+            if similarity > 0:  # Only include users with some matching interests
+                user['similarity_score'] = round(similarity * 100, 2)  # Convert to percentage
+                matches_with_scores.append(user)
+
+        # Sort by similarity score (descending) and limit results
+        matches_with_scores.sort(key=lambda x: x.get('similarity_score', 0), reverse=True)
+        final_matches = matches_with_scores[:num_people]
+
+        print(f"Found {len(final_matches)} matches with interests for destination: {destination}")
+        return jsonify(final_matches)
+
     except Exception as e:
-        print(f"Error in find_matches: {str(e)}")  # Debug print
-        import traceback
-        print("Traceback:", traceback.format_exc())  # Print full traceback
-        return jsonify({
-            "error": "Server error",
-            "message": str(e),
-            "code": "SERVER_ERROR"
-        }), 500
+        print(f"Error in find_matches: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 # Example of how to retrieve a user's data
 @app.route('/user/<username>', methods=['GET'])
