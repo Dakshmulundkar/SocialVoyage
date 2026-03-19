@@ -1,0 +1,207 @@
+/* Pastel Blue & Brown Color Scheme */
+:root {
+    --bg-gradient: linear-gradient(135deg, #A8DADC, #F4D6B7, #F4F1DE);
+    --primary-bg: #F4F1DE;
+    --secondary-bg: #A8DADC;
+    --accent: #F4D6B7;
+    --text-primary: #3D405B;
+    --text-secondary: #6D6875;
+    --border-color: #B8B8B8;
+    --hover-bg: #E6BEAE;
+    --error: #E56B6F;
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg-gradient);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: var(--text-primary);
+}
+
+.container {
+    display: flex;
+    background: var(--primary-bg);
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 1200px;
+    overflow: hidden;
+    position: relative;
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+    position: relative;
+    min-height: 500px;
+}
+
+.profile-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profile-pic {
+    width: 60px;
+    height: 60px;
+    background: var(--accent);
+    border-radius: 50%;
+    margin-right: 15px;
+    border: 2px solid var(--border-color);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.profile-pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+}
+
+.profile-pic span {
+    color: var(--text-secondary);
+    font-size: 1.2em;
+}
+
+.profile-pic input {
+    display: none;
+}
+
+.form-fields {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 60px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.form-group input, .form-group select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--primary-bg);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus, .form-group select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(244, 214, 183, 0.3);
+}
+
+.language-input {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.language-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.language-tag {
+    background: var(--secondary-bg);
+    color: var(--text-primary);
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.9em;
+}
+
+.next-button, .done-button, .add-language {
+    background: var(--accent);
+    color: var(--text-primary);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-align: center;
+    width: auto;
+    margin: 5px;
+}
+
+.next-button:hover, .done-button:hover, .add-language:hover {
+    background: var(--hover-bg);
+    transform: translateY(-1px);
+}
+
+.completed-profile {
+    display: none;
+    padding: 20px;
+}
+
+.age-validation {
+    color: var(--error);
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.error-message {
+    color: var(--error);
+    font-size: 0.8em;
+    margin-top: 5px;
+}
+
+.completed-profile h2 {
+    margin-bottom: 20px;
+}
+
+.completed-profile .profile-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.completed-profile .profile-details div {
+    margin-bottom: 15px;
+}
+
+.completed-profile .profile-details label {
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.completed-profile .profile-details span {
+    color: var(--text-primary);
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideBack {
+    from { transform: translateX(-100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@media (max-width: 768px) {
+    .form-fields, .completed-profile .profile-details {
+        grid-template-columns: 1fr;
+    }
+}

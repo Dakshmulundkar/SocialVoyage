@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialVoyage</title>
+    <link rel="stylesheet" type="text/css" href="/static/landing/index.css">
+    <style>
+        html {
+            scroll-behavior: smooth;
+            scroll-timeline: 2s ease;
+        }
+        
+        body {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        .page {
+            transition: transform 2s ease;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">SocialVoyage✈️</div>
+        <nav>
+            <a href="#home">Home Page</a>
+            <a href="#connect">Meetups Now</a>
+            <a href="#profiles">User Profiles</a>
+            <a href="#more">More Options</a>
+        </nav>
+        <div class="nav-buttons">
+            <button class="join-btn">Join</button>
+            <a href="/login">
+            <button class="signup-btn">Sign Up</button></a>
+        </div>
+    </header>
+
+    <section id="home" class="page">
+        <div class="content">
+            <h1>Discover Your Next Adventure with SocialVoyage</h1>
+            <p>Connect with like-minded individuals and explore hidden gems in your area. Dive into a world of local meetups and personalized recommendations tailored just for you.</p>
+            <div class="buttons">
+                <a href="#more"><button class="explore-btn">Explore</button></a>
+                <a href="/login"><button class="join-btn">Join</button></a>
+            </div>
+        </div>
+
+        <div class="media-grid">
+            <div class="media-item"><img src="/static/landing/travelwithfriends2.jpg" alt="Media 1"></div>
+            <div class="media-item"><img src="/static/landing/travelwithfriens3.jpg" alt="Media 2"></div>
+            <div class="media-item"><video src="/static/landing/Wander.mp4" controls></video></div>
+            <div class="media-item"><img src="/static/landing/travelwithfriends4.jpg" alt="Media 3"></div>
+            <div class="media-item"><img src="/static/landing/museium1.jpeg" alt="Media 4"></div>
+            <div class="media-item"><img src="/static/landing/rangers.jpg" alt="Media 5"></div>
+            <div class="media-item"><img src="/static/landing/one piece.jpg" alt="Media 6"></div>
+        </div>
+    </section>
+
+    <section id="connect" class="page">
+        <div class="container">
+            <h4>Connect</h4>
+            <h1>Discover Your Next Adventure with SocialVoyage</h1>
+            <p>SocialVoyage empowers you to explore local meetups, share hidden gems, and engage with a personalized social feed. Connect with like-minded individuals and make meaningful connections effortlessly.</p>
+
+            <div class="features">
+                <div class="feature">
+                    <div class="image-placeholder">
+                        <img src="/static/landing/foryou.jpg" alt="Description">
+                    </div>
+                    <h3>Explore Local Meetups Tailored for You</h3>
+                    <p>Browse exciting events happening right in your area.</p>
+                </div>
+                <div class="feature">
+                    <div class="image-placeholder">
+                        <img src="/static/landing/recomended.jpg" alt="Description">
+                    </div>
+                    <h3>User-Generated Recommendations for Unique Experiences</h3>
+                    <p>Discover hidden gems shared by fellow users.</p>
+                </div>
+                <div class="feature">
+                    <div class="image-placeholder">
+                        <img src="/static/landing/friends1.jpg" alt="Description">
+                    </div>
+                    <h3>Find Matches Based on Your Interests</h3>
+                    <p>Connect with people who share your passions and explore events tailored to you.</p>
+                </div>
+            </div>
+            <div class="buttons">
+                <a href="#more"><button class="learn-btn">Learn More</button></a>
+                <a href="/login"><button class="signup-btn">Sign Up →</button></a>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="page">
+        <div class="contact-content">
+            <div class="text-content">
+                <h4>Contact</h4>
+                <h1>Unlock New Connections and Experiences Today</h1>
+                <p>SocialVoyage empowers you to connect with like-minded individuals, making it easy to form meaningful relationships. Discover hidden gems in your area and engage in enriching conversations that broaden your horizons.</p>
+                <div class="buttons">
+                    <a href="/templates/login.html"><button class="join-btn">Join</button></a>
+                    <button class="explore-btn">Explore</button>
+                </div>
+            </div>
+            <div class="image-contact">
+                <img src="/static/landing/meetlocals2.jpg" alt="Placeholder Image">
+            </div>
+        </div>
+    </section>
+    
+    <section id="more" class="page">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Explore More</h3>
+                <ul>
+                    <li><strong>Upcoming Events</strong> - Discover local meetups and activities.</li>
+                    <li><strong>Connect Now</strong> - Find like-minded individuals in your area.</li>
+                    <li><strong>Hidden Gems</strong> - Share your favorite local spots with others.</li>
+                    <li><strong>Join Us</strong> - Become part of our vibrant community today.</li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>User Resources</h3>
+                <ul>
+                    <li><strong>Help Center</strong> - Get assistance with your account.</li>
+                    <li><strong>Feedback</strong> - Share your thoughts to improve our app.</li>
+                    <li><strong>Settings</strong> - Customize your experience.</li>
+                    <li><strong>Logout</strong> - Exit your account securely.</li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Community Links</h3>
+                <ul>
+                    <li><strong>Social Media</strong> - <a href="https://www.instagram.com/daksh_mulundkar/" target="_blank">Follow us for updates and news.</a></li>
+                    <li><strong>Blog</strong> - Read articles about events.</li>
+                    <li><strong>Contact Us</strong> - Reach out for inquiries.</li>
+                    <li><strong>Terms of Service</strong> - Review policies and guidelines.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const pages = ['home', 'connect', 'contact', 'more'];
+            let currentPageIndex = 0;
+            let isAutoScrolling = false;
+            
+            function scrollToPage(index) {
+                if (isAutoScrolling) return;
+                isAutoScrolling = true;
+                currentPageIndex = index;
+                
+                const targetElement = document.getElementById(pages[index]);
+                targetElement.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+                
+                setTimeout(() => {
+                    isAutoScrolling = false;
+                }, 2000);
+            }
+            
+            setInterval(() => {
+                const nextIndex = (currentPageIndex + 1) % pages.length;
+                scrollToPage(nextIndex);
+            }, 10000);
+            
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowUp' && currentPageIndex > 0) {
+                    scrollToPage(currentPageIndex - 1);
+                } else if (e.key === 'ArrowDown' && currentPageIndex < pages.length - 1) {
+                    scrollToPage(currentPageIndex + 1);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

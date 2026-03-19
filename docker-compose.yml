@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:5.0
+    container_name: socialvoyage-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: adminpassword
+    networks:
+      - socialvoyage-network
+
+  app:
+    build: .
+    container_name: socialvoyage-app
+    restart: always
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongodb
+    environment:
+      - MONGODB_URI=mongodb://admin:adminpassword@mongodb:27017/
+      - SECRET_KEY=your-production-secret-key-here
+      - FLASK_ENV=production
+    volumes:
+      - ./static/uploads:/app/static/uploads
+    networks:
+      - socialvoyage-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  mongodb_data:
+
+networks:
+  socialvoyage-network:
+    driver: bridge

@@ -1,0 +1,114 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f8f8f8;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    align-items: center;
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    margin: 0 20px;
+    background: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.search-container input {
+    border: none;
+    outline: none;
+    width: 100%;
+}
+
+.search-icon {
+    color: #999;
+    font-size: 18px;
+}
+
+.plans-section, .countries-section {
+    margin: 20px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.plans {
+    display: flex;
+    overflow-x: scroll;
+    gap: 15px;
+}
+
+.plan-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    width: 150px;
+}
+
+.plan-card img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.plan-info {
+    font-size: 12px;
+    color: gray;
+}
+
+.countries {
+    display: flex;
+    gap: 10px;
+}
+
+.country-card {
+    background: #fff;
+    padding: 10px;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.country-card img {
+    width: 150px;
+    height: 100px;
+    border-radius: 10px;
+}
+
+.bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #fff;
+    padding: 10px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.bottom-nav i {
+    font-size: 24px;
+    color: #555;
+}
+
+.add-plan {
+    background: blue;
+    color: #fff;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+}
